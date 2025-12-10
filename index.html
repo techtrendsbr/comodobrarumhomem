@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Como Dobrar um Homem - O Manual do Psicocomportamento do Homem</title>
+    <title>Como Dobrar um Homem - Experience</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -21,10 +21,10 @@
             width: 100vw;
         }
 
-        /* --- LOADING SCREEN --- */
+        /* --- LOADING SCREEN (Z-INDEX MÁXIMO) --- */
         #loader-screen {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background-color: #000; z-index: 9999;
+            background-color: #000; z-index: 10000; /* Aumentado para garantir cobertura */
             display: flex; justify-content: center; align-items: center;
             flex-direction: column;
             transition: opacity 0.8s ease-out;
@@ -116,14 +116,13 @@
             padding: 40px; border-radius: 20px;
             border: 1px solid rgba(212, 175, 55, 0.15);
             box-shadow: 0 20px 50px rgba(0,0,0,0.7);
-            overflow: hidden; /* Importante para o slide interno */
+            overflow: visible; 
         }
 
         .content-card.home-style {
             background: none; backdrop-filter: none; border: none; box-shadow: none;
             top: auto; bottom: 15%; transform: translate(-50%, 20px);
             text-shadow: 0 4px 15px rgba(0,0,0,1);
-            overflow: visible; /* Home precisa ser visível para badge */
         }
         .content-card.home-style h1 { font-size: 2.5rem; margin-bottom: 10px; }
         .content-card.home-style p { font-size: 1.2rem; text-shadow: 0 2px 5px rgba(0,0,0,1); }
@@ -133,89 +132,76 @@
         .content-card.home-style.active { transform: translate(-50%, 0); }
         .content-card:not(.home-style).active { transform: translate(-50%, -50%) scale(1); }
 
-        /* --- HOME SLIDE UP EFFECT --- */
+        /* --- SLIDE UP PANEL (HOME) - AJUSTADO PARA MOBILE --- */
         .home-content-wrapper {
-            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s;
+            transition: transform 0.6s, opacity 0.6s;
         }
-        .home-content-wrapper.hidden {
-            transform: translateY(-50px);
-            opacity: 0;
-            pointer-events: none;
-        }
+        .home-content-wrapper.hidden { transform: translateY(-50px); opacity: 0; pointer-events: none; }
 
         .slide-up-panel {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            /* Estilo similar ao card normal */
-            background: rgba(20, 5, 5, 0.95);
-            backdrop-filter: blur(15px);
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            padding: 30px;
-            border-radius: 20px;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(20, 5, 5, 0.98); backdrop-filter: blur(15px);
+            display: flex; flex-direction: column; 
+            padding: 20px; border-radius: 20px;
             border: 1px solid rgba(212, 175, 55, 0.15);
-            
-            transform: translateY(110%); /* Começa escondido embaixo */
+            transform: translateY(110%);
             transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-            z-index: 20;
-            text-align: left;
+            z-index: 25; text-align: left;
         }
         .slide-up-panel.active { transform: translateY(0); }
         
-        .slide-up-panel h3 { color: #d4af37; font-family:'Playfair Display'; margin-bottom: 15px; text-align: center; }
-        .slide-up-panel ul { list-style: none; padding: 0; }
-        .slide-up-panel li { margin-bottom: 10px; color: #ddd; font-size: 0.9rem; line-height: 1.4; text-shadow: none; }
-        .slide-up-panel strong { color: #fff; }
-
-        .close-slide-btn {
-            position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
-            color: #d4af37; font-size: 1.5rem; cursor: pointer;
-            animation: bounce 2s infinite;
+        /* Cabeçalho fixo do slide */
+        .slide-header { flex: 0 0 auto; text-align: center; margin-bottom: 10px; position: relative; }
+        .close-slide-btn { color: #d4af37; font-size: 1.5rem; cursor: pointer; animation: bounce 2s infinite; }
+        
+        /* Conteúdo com scroll */
+        .slide-content-scroll {
+            flex: 1 1 auto;
+            overflow-y: auto; /* PERMITE SCROLL */
+            padding-right: 5px;
+            /* Scrollbar estilizado */
+            scrollbar-width: thin; scrollbar-color: #d4af37 #222;
         }
+        .slide-content-scroll::-webkit-scrollbar { width: 6px; }
+        .slide-content-scroll::-webkit-scrollbar-thumb { background-color: #d4af37; border-radius: 3px; }
+
+        .slide-up-panel h3 { color: #d4af37; font-family:'Playfair Display'; margin-bottom: 10px; text-align: center; }
+        .slide-up-panel ul { list-style: none; padding: 0; }
+        .slide-up-panel li { margin-bottom: 15px; color: #ddd; font-size: 0.9rem; line-height: 1.4; text-shadow: none; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px;}
+        .slide-up-panel strong { color: #fff; font-size: 1rem; }
+
         @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);}
-            40% {transform: translateX(-50%) translateY(5px);}
-            60% {transform: translateX(-50%) translateY(3px);}
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(5px);}
+            60% {transform: translateY(3px);}
         }
 
         /* --- THUMBNAIL GIF (CARD 1) + BADGE --- */
         .interview-thumb {
-            width: 300px; height: 170px;
-            margin: 0 auto 20px auto;
+            width: 300px; height: 170px; margin: 0 auto 20px auto;
             border-radius: 10px; border: 2px solid #d4af37; background-color: #000;
             background-image: url('https://res.cloudinary.com/dabmzfood/image/upload/v1765054037/w_300/cover_nbv6ui.gif');
             background-size: cover; background-position: center; background-repeat: no-repeat;
             position: relative; cursor: pointer;
             box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
-            transition: transform 0.3s, box-shadow 0.3s; 
-            overflow: visible; 
+            transition: transform 0.3s; overflow: visible; 
         }
-        .interview-thumb:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(212, 175, 55, 0.6); }
-        
+        .interview-thumb:hover { transform: scale(1.05); }
         .play-icon-overlay {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            color: #fff; font-size: 2rem; text-shadow: 0 2px 10px rgba(0,0,0,0.9); opacity: 0.8;
-            pointer-events: none;
+            color: #fff; font-size: 2rem; opacity: 0.8; pointer-events: none;
         }
-
         .video-badge {
-            position: absolute;
-            bottom: -15px; right: -15px; 
-            width: 65px; height: 65px; 
-            border-radius: 50%; 
+            position: absolute; bottom: -15px; right: -15px; 
+            width: 65px; height: 65px; border-radius: 50%; 
             background: linear-gradient(135deg, #d00000, #900000);
-            color: #fff;
-            display: flex; justify-content: center; align-items: center;
-            text-align: center;
-            font-size: 0.7rem; font-weight: 800;
-            text-transform: uppercase;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.6);
-            border: 2px solid rgba(255,255,255,0.2);
-            z-index: 10;
-            transform: rotate(-10deg); 
-            line-height: 1.1;
+            color: #fff; display: flex; justify-content: center; align-items: center;
+            text-align: center; font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.6); border: 2px solid rgba(255,255,255,0.2);
+            z-index: 10; transform: rotate(-10deg); line-height: 1.1;
         }
 
-        /* --- CARROSSEL GRID (CARD STORY) --- */
+        /* --- CARROSSEL GRID --- */
         .carousel-wrapper {
             display: flex; align-items: center; justify-content: center;
             gap: 15px; width: 100%; margin: 20px 0;
@@ -234,16 +220,10 @@
             border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.4);
             cursor: pointer; transition: transform 0.2s;
         }
-        .photo-square:hover { transform: scale(1.05); border-color: #fff; z-index: 2; }
-
         .nav-arrow {
             background: transparent; border: none; color: #d4af37; 
             font-size: 1.8rem; cursor: pointer; padding: 0 10px;
-            transition: transform 0.2s, color 0.2s;
-            display: flex; align-items: center; justify-content: center;
         }
-        .nav-arrow:hover { color: #fff; transform: scale(1.2); }
-        .nav-arrow:active { transform: scale(0.9); }
 
         /* --- AUTOR & FAMILIA --- */
         .author-box {
@@ -254,30 +234,22 @@
         .author-img {
             width: 80px; height: 80px; border-radius: 50%; object-fit: cover;
             border: 2px solid #d4af37; flex-shrink: 0;
-            background-image: url('claudioesu.png');
-            background-size: cover; background-position: center;
+            background-image: url('claudioesu.png'); background-size: cover; background-position: center;
         }
         .author-text h3 { font-family: 'Playfair Display', serif; color: #d4af37; margin-bottom: 5px; font-size: 1.1rem; }
         .author-text p { font-size: 0.85rem; color: #ddd; margin-bottom: 0; line-height: 1.4; }
         
         .family-gallery {
-            display: flex; justify-content: space-between; gap: 10px; margin-bottom: 20px;
-            width: 100%;
+            display: flex; justify-content: space-between; gap: 10px; margin-bottom: 20px; width: 100%;
         }
         .family-item {
-            display: flex; flex-direction: column; align-items: center; gap: 5px;
-            flex: 1; /* Distribui tamanho igual */
+            display: flex; flex-direction: column; align-items: center; gap: 5px; flex: 1;
         }
         .family-thumb {
-            width: 100%; height: 75px; 
-            border-radius: 10px; border: 1px solid rgba(212, 175, 55, 0.3);
+            width: 100%; height: 75px; border-radius: 10px; border: 1px solid rgba(212, 175, 55, 0.3);
             background-color: #222; background-size: cover; background-position: center;
         }
-        .family-caption {
-            font-size: 0.7rem; color: #d4af37; text-transform: uppercase; letter-spacing: 1px;
-        }
-
-        @media (max-width: 600px) { .author-box { flex-direction: column; text-align: center; } }
+        .family-caption { font-size: 0.7rem; color: #d4af37; text-transform: uppercase; letter-spacing: 1px; }
 
         /* --- GLOBAL & BTNS --- */
         h1, h2 { font-family: 'Playfair Display', serif; color: #fff; margin-bottom: 20px; }
@@ -292,18 +264,48 @@
             box-shadow: 0 5px 20px rgba(212, 175, 55, 0.3);
             transition: transform 0.3s; cursor: pointer; border: none;
         }
-        .cta-btn:hover { transform: scale(1.05); }
-
+        
         .btn-row { display: flex; align-items: center; justify-content: center; gap: 15px; margin-top: 10px; }
         .round-btn {
-            width: 50px; height: 50px; border-radius: 50%;
-            border: 1px solid #d4af37;
+            width: 40px; height: 40px; border-radius: 50%; border: 1px solid #d4af37;
             display: flex; justify-content: center; align-items: center;
-            color: #d4af37; cursor: pointer; transition: all 0.3s; background: rgba(0,0,0,0.3);
+            color: #d4af37; cursor: pointer; background: rgba(0,0,0,0.3);
         }
-        .round-btn:hover { background: #d4af37; color: #1a0505; transform: scale(1.1); }
 
-        /* --- MODALS (IMAGEM E TEXTO) --- */
+        /* --- MEDIA QUERIES (MOBILE FIXES) --- */
+        @media (max-width: 768px) {
+            .content-card { 
+                width: 90%; 
+                padding: 20px; 
+                top: 45%; /* Sobe um pouco os cards */
+                max-height: 80vh; /* Evita que o card seja maior que a tela */
+            }
+            .content-card.home-style h1 { font-size: 2rem; margin-bottom: 20px; }
+            .content-card.home-style p { display: none !important; }
+            
+            /* Home Fixes */
+            .hide-mobile { display: none !important; }
+            .cta-btn { padding: 12px 10px; font-size: 0.90rem; width: 70%; }
+            
+            /* Slide Up Panel Fix */
+            .slide-up-panel { padding: 15px; }
+            .slide-up-panel h3 { margin-bottom: 10px; }
+            
+            /* Author Fixes */
+            .author-box { display: none; } /* Esconde Bio */
+            .family-gallery { gap: 5px; margin-bottom: 15px; }
+            .family-thumb { height: 60px; }
+            .family-caption { font-size: 0.6rem; }
+            
+            /* Offer Fixes */
+            #card-offer h2 { font-size: 1.5rem; margin-bottom: 10px; }
+            #card-offer img { max-width: 150px; margin-bottom: 10px; }
+            
+            /* Menu fix */
+            .dock-menu { padding: 10px 25px; bottom: 20px; }
+        }
+
+        /* --- MODALS --- */
         .modal-overlay, .lightbox-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.9); z-index: 5000;
@@ -314,40 +316,21 @@
         .modal-overlay.open, .lightbox-overlay.active { opacity: 1; pointer-events: all; }
         
         .modal-box, .gallery-box, .text-modal-box {
-            background: #1a0505; border: 1px solid #d4af37; padding: 30px;
+            background: #1a0505; border: 1px solid #d4af37; padding: 25px;
             max-width: 500px; width: 90%; border-radius: 15px; text-align: center; position: relative;
         }
-        /* Modal de Texto Específico */
         .text-modal-box { text-align: left; max-height: 80vh; overflow-y: auto; }
-        .text-modal-box ul { list-style: none; padding: 0; }
-        .text-modal-box li { margin-bottom: 15px; color: #ddd; line-height: 1.5; font-size: 0.95rem; }
-        .text-modal-box li strong { color: #d4af37; font-size: 1rem; display: block; margin-bottom: 3px; }
-
         .close-modal { position: absolute; top: 10px; right: 15px; color: #d4af37; cursor: pointer; font-size: 1.5rem; }
         
-        /* Gallery Viewer Style */
-        .gallery-viewer {
-            display: flex; align-items: center; justify-content: space-between; gap: 10px;
-            margin-top: 20px;
-        }
+        /* Gallery */
+        .gallery-viewer { display: flex; align-items: center; justify-content: space-between; gap: 5px; margin-top: 15px; }
         .gallery-img-container {
-            width: 100%; height: 350px; 
-            background: #000; border-radius: 10px; border: 1px solid #333;
-            overflow: hidden; display: flex; align-items: center; justify-content: center;
+            width: 100%; height: 300px; 
+            background: #000; border-radius: 10px; overflow: hidden; 
+            display: flex; align-items: center; justify-content: center;
         }
         .gallery-img-container img { width: 100%; height: 100%; object-fit: contain; }
-        .modal-arrow {
-            background: none; border: none; color: #d4af37; font-size: 2rem; cursor: pointer;
-            padding: 0 10px; transition: transform 0.2s;
-        }
-        .modal-arrow:hover { transform: scale(1.2); color: #fff; }
-
-        .lightbox-content { max-width: 90%; max-height: 90%; position: relative; }
-        .lightbox-content img, .lightbox-content video { max-width: 100vw; max-height: 90vh; border: 2px solid #d4af37; border-radius: 5px; }
-        .close-lightbox {
-            position: absolute; top: 20px; right: 20px;
-            color: #fff; font-size: 2rem; cursor: pointer; z-index: 6001;
-        }
+        .modal-arrow { background: none; border: none; color: #d4af37; font-size: 2rem; padding: 0 5px; }
 
         .dock-menu {
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
@@ -359,13 +342,8 @@
         }
         .dock-item { color: rgba(255,255,255,0.4); font-size: 1.4rem; padding: 8px; cursor: pointer; transition: all 0.3s; }
         .dock-item:hover, .dock-item.active { color: #d4af37; transform: translateY(-5px); }
-
-        @media (max-width: 768px) {
-            .content-card.home-style h1 { font-size: 2.5rem; }
-            .content-card { width: 90%; padding: 25px; }
-            header { padding: 15px; }
-            .logo-img { height: 40px; padding: 5px 10px; }
-        }
+        .lightbox-content img, .lightbox-content video { max-width: 100vw; max-height: 90vh; border-radius: 5px; }
+        .close-lightbox { position: absolute; top: 20px; right: 20px; color: #fff; font-size: 2rem; cursor: pointer; z-index: 6001; }
     </style>
 </head>
 <body>
@@ -394,7 +372,7 @@
             <div class="close-modal" onclick="toggleModal(false)">&times;</div>
             <h3 style="color:#d4af37; margin-bottom:15px;">Ficou com dúvidas?</h3>
             <p style="color:#ccc; font-size:0.9rem;">Entre em contato com nosso suporte exclusivo.</p>
-            <a href="https://wa.me/SEU_NUMERO_AQUI" target="_blank" class="whatsapp-btn" style="background:#25D366;color:#fff;padding:10px 20px;border-radius:5px;text-decoration:none;display:inline-block;margin-top:20px;">
+            <a href="https://wa.me/SEU_NUMERO_AQUI" target="_blank" style="background:#25D366;color:#fff;padding:10px 20px;border-radius:5px;text-decoration:none;display:inline-block;margin-top:20px;">
                 <i class="fab fa-whatsapp"></i> Falar no WhatsApp
             </a>
         </div>
@@ -404,7 +382,6 @@
         <div class="gallery-box">
             <div class="close-modal" onclick="toggleGalleryModal(false)">&times;</div>
             <h3 id="galleryTitle" style="color:#d4af37; margin-bottom:15px; font-family:'Playfair Display'">Galeria</h3>
-            
             <div class="gallery-viewer">
                 <button class="modal-arrow" onclick="navigateGallery(-1)"><i class="fas fa-chevron-left"></i></button>
                 <div class="gallery-img-container">
@@ -419,8 +396,7 @@
         <div class="text-modal-box">
             <div class="close-modal" onclick="toggleTextModal(false)">&times;</div>
             <h3 id="textModalTitle" style="color:#d4af37; margin-bottom:15px; font-family:'Playfair Display'; text-align:center;"></h3>
-            <div id="textModalContent">
-                </div>
+            <div id="textModalContent"></div>
         </div>
     </div>
 
@@ -539,8 +515,6 @@
                 <button class="nav-arrow" onclick="moveCarousel(1)"><i class="fas fa-chevron-right"></i></button>
             </div>
 
-            <p>Conheça alguns dos incontáveis relatos que o livro já promoveu:</p>
-
             <div class="btn-row">
                 <a onclick="openGalleryModal('testimonials')" class="cta-btn">Depoimentos</a>
                 <div class="round-btn" onclick="switchSection('card-offer')" title="Próximo">
@@ -548,15 +522,16 @@
                 </div>
             </div>
         </div>
+    
 
         <div class="content-card" id="card-offer">
             <img src="cduh.png" alt="Capa do Ebook" style="max-width: 200px; margin-bottom: 20px; border-radius: 10px;">
             <h2><span>Edição Digital 3.0</span>Revisão atualizada </br>para relações em 2026!</h2>
-            <p> "Como Dobrar Um Homem" é o último livro sobre o Homem que você precisará!</p>
             <div style="font-size: 1.2rem; color: #aaa; text-decoration: line-through;">De R$ 109,00</div></br>
             <a href="#" class="cta-btn">Apenas 6 x R$6,31</a>
             <p style="font-size: 0.7rem; letter-spacing: 1px; color: #aaa; margin-top:10px;"><b>OBS: Você está adquirindo a versão digital do livro. </br>Volume físico à venda somente em eventos presenciais</b></p>
         </div>
+        
     </main>
 
     <nav class="dock-menu" id="dockMenu">
@@ -570,85 +545,75 @@
         // --- CONFIGURAÇÃO ---
         const sectionConfig = {
             'card-home': { image: 'lastframe.jpeg', video: 'video.mp4' },
-            'card-story': { image: 'woman.jpeg', video: 'video31.mp4', loopVideo: 'video32.mp4' },
-            'card-author': { image: 'couple.jpeg', video: 'video2.mp4' },
+            'card-author': { image: 'woman.jpeg', video: 'video31.mp4', loopVideo: 'video32.mp4' },
+            'card-story': { image: 'couple.jpeg', video: 'video2.mp4' },
             'card-offer': { image: 'gift.jpeg', video: 'video4.mp4' }
         };
 
-        // --- CONTEÚDO DAS GALERIAS (IMAGENS) ---
+        // --- CONTEÚDO DAS GALERIAS ---
         const galleryContent = {
             'testimonials': {
                 title: 'Depoimentos Reais',
-                images: [
-                    'depo01.jpg', 
-                    'depo02.jpg', 
-                    'depo03.jpg', 
-                    'depo04.jpg', 
-                    'depo05.jpg', 
-                    'depo07.jpg', 
-                    'depo08.jpg',
-                    'depo09.jpg'
-                ]
+                images: ['depo01.jpg', 'depo02.jpg', 'depo03.jpg', 'depo04.jpg', 'depo05.jpg', 'depo07.jpg', 'depo08.jpg']
             }
         };
 
-        // --- CONTEÚDO DOS MODAIS DE TEXTO ---
         const textContent = {
             'chapters': {
-                title: 'Sumário dos 9 capítulos',
+                title: 'Sumário do Livro',
                 html: `
                     <ul style="padding: 0;">
                         <li style="margin-bottom:15px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:5px;">
                             <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                                <span style="padding-right:10px;"><strong>1. Com licença, posso entrar?</strong><br><span style="font-size:0.9em; opacity:0.7;">A introdução essencial para mudar sua mentalidade.</span></span>
+                                <span style="padding-right:10px;"><strong>1. Com licença, posso entrar?</strong><span style="font-size:0.9em; opacity:0.7;">A introdução essencial.</span></span>
                                 <span style="color:#d4af37; white-space:nowrap; font-size:0.9em;">[12 a 23]</span>
                             </div>
                         </li>
                         <li style="margin-bottom:15px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:5px;">
                             <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                                <span style="padding-right:10px;"><strong>2. Fundamentos da Psicologia</strong><br><span style="font-size:0.9em; opacity:0.7;">Entendendo a raiz biológica e social.</span></span>
+                                <span style="padding-right:10px;"><strong>2. Fundamentos da Psicologia</strong><span style="font-size:0.9em; opacity:0.7;">Entendendo a raiz biológica.</span></span>
                                 <span style="color:#d4af37; white-space:nowrap; font-size:0.9em;">[24 a 32]</span>
                             </div>
                         </li>
                         <li style="margin-bottom:15px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:5px;">
                             <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                                <span style="padding-right:10px;"><strong>3. Somos todos consumidores</strong><br><span style="font-size:0.9em; opacity:0.7;">Como as relações modernas funcionam como mercado.</span></span>
+                                <span style="padding-right:10px;"><strong>3. Somos todos consumidores</strong><span style="font-size:0.9em; opacity:0.7;">O mercado das relações.</span></span>
                                 <span style="color:#d4af37; white-space:nowrap; font-size:0.9em;">[33 a 44]</span>
                             </div>
                         </li>
                         <li style="margin-bottom:15px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:5px;">
                             <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                                <span style="padding-right:10px;"><strong>4. Entendendo o Homem</strong><br><span style="font-size:0.9em; opacity:0.7;">Aula introdutória e guia prático direto ao ponto.</span></span>
+                                <span style="padding-right:10px;"><strong>4. Entendendo o Homem</strong><span style="font-size:0.9em; opacity:0.7;">Aula introdutória prática.</span></span>
                                 <span style="color:#d4af37; white-space:nowrap; font-size:0.9em;">[45 a 71]</span>
                             </div>
                         </li>
                         <li style="margin-bottom:15px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:5px;">
                             <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                                <span style="padding-right:10px;"><strong>5. Conquistadores X Namoradores</strong><br><span style="font-size:0.9em; opacity:0.7;">Aprenda a filtrar quem quer compromisso.</span></span>
+                                <span style="padding-right:10px;"><strong>5. Conquistadores X Namoradores</strong><span style="font-size:0.9em; opacity:0.7;">Filtre quem quer compromisso.</span></span>
                                 <span style="color:#d4af37; white-space:nowrap; font-size:0.9em;">[72 a 82]</span>
                             </div>
                         </li>
                         <li style="margin-bottom:15px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:5px;">
                             <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                                <span style="padding-right:10px;"><strong>6. A Execução: Planejando a Dobra</strong><br><span style="font-size:0.9em; opacity:0.7;">O passo a passo estratégico para assumir o controle.</span></span>
+                                <span style="padding-right:10px;"><strong>6. A Execução: Planejando a Dobra</strong><span style="font-size:0.9em; opacity:0.7;">O passo a passo estratégico.</span></span>
                                 <span style="color:#d4af37; white-space:nowrap; font-size:0.9em;">[83 a 97]</span>
                             </div>
                         </li>
                         <li style="margin-bottom:15px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:5px;">
                             <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                                <span style="padding-right:10px;"><strong>7. Posicionando-se para o Embate</strong><br><span style="font-size:0.9em; opacity:0.7;">Como agir nos primeiros conflitos e testes.</span></span>
+                                <span style="padding-right:10px;"><strong>7. Posicionando-se para o Embate</strong><span style="font-size:0.9em; opacity:0.7;">Como agir nos conflitos.</span></span>
                                 <span style="color:#d4af37; white-space:nowrap; font-size:0.9em;">[98 a 125]</span>
                             </div>
                         </li>
                         <li style="margin-bottom:15px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:5px;">
                             <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                                <span style="padding-right:10px;"><strong>8. Técnicas Dobrantes</strong><br><span style="font-size:0.9em; opacity:0.7;">O arsenal prático para aplicar no dia a dia.</span></span>
+                                <span style="padding-right:10px;"><strong>8. Técnicas Dobrantes</strong><span style="font-size:0.9em; opacity:0.7;">O arsenal prático.</span></span>
                                 <span style="color:#d4af37; white-space:nowrap; font-size:0.9em;">[126 a 143]</span>
                             </div>
                         </li>
                         <li style="margin-bottom:15px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:5px;">
                             <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                                <span style="padding-right:10px;"><strong>9. Pisando no Freio</strong><br><span style="font-size:0.9em; opacity:0.7;">A arte de manter o interesse a longo prazo.</span></span>
+                                <span style="padding-right:10px;"><strong>9. Pisando no Freio</strong><span style="font-size:0.9em; opacity:0.7;">Manter o interesse.</span></span>
                                 <span style="color:#d4af37; white-space:nowrap; font-size:0.9em;">[144 a 158]</span>
                             </div>
                         </li>
@@ -656,7 +621,7 @@
                 `
             }
         };
-        
+
         let currentSection = 'card-home';
         const staticBg = document.getElementById('staticBg');
         const videoLayer = document.getElementById('videoLayer');
@@ -715,7 +680,7 @@
             });
         }
 
-        // --- LÓGICA DO SLIDE UP NO CARD HOME ---
+        // --- HOME SLIDE ---
         function toggleHomeDetails(show) {
             const mainContent = document.getElementById('homeMainContent');
             const panel = document.getElementById('homeDetailsPanel');
@@ -733,7 +698,6 @@
             state ? modal.classList.add('open') : modal.classList.remove('open');
         }
 
-        // --- LÓGICA MODAL DE TEXTO ---
         function toggleTextModal(state) {
             const modal = document.getElementById('textModal');
             state ? modal.classList.add('open') : modal.classList.remove('open');
@@ -747,7 +711,6 @@
             toggleTextModal(true);
         }
 
-        // --- LÓGICA MODAL GALERIA ---
         let currentGalleryType = '';
         let currentGalleryIndex = 0;
 
@@ -759,7 +722,6 @@
         function openGalleryModal(type) {
             const data = galleryContent[type];
             if(!data) return;
-            
             currentGalleryType = type;
             currentGalleryIndex = 0;
             document.getElementById('galleryTitle').innerText = data.title;
@@ -780,7 +742,6 @@
             document.getElementById('galleryImage').src = imgSrc;
         }
 
-        // --- CARROSSEL GRID (CARD 3) ---
         let currentCarouselPage = 0;
         const totalPages = 2; 
         function moveCarousel(direction) {
@@ -791,7 +752,6 @@
             track.style.transform = `translateX(-${currentCarouselPage * 100}%)`;
         }
 
-        // --- LIGHTBOX ---
         const lightbox = document.getElementById('mediaLightbox');
         const lightboxContent = document.getElementById('lightboxContent');
         function openLightbox(type, src) {
